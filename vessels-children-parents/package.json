@@ -1,0 +1,14 @@
+{
+  "name": "vessels-children-parents",
+  "version": "1.0.0",
+  "description": "Plugin that create a relationship between the vessel and other vessels",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "signalk-node-server-plugin"
+  ],
+  "author": "luciococorullo",
+  "license": "ISC"
+}
