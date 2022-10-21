@@ -32,10 +32,12 @@ module.exports = function (app) {
 
   plugin.start = function (options, restartPlugin) {
     app.debug("Plugin started");
-    //app.debug(plugin.parents);
+
+
     // here i will put my plugin logic
     let value = app.getSelfPath('uuid');
     app.debug(value); // Should output something like urn:mrn:signalk:uuid:a9d2c3b1-611b-4b00-8628-0b89d014ed60
+
 
     if(options){
       plugin.parents = options.parents
@@ -65,6 +67,52 @@ module.exports = function (app) {
       ]});
     app.debug('parents and children sent');
 
+    //let context = app.getPath('vessels');
+    //app.debug(context);
+
+
+    let localSubscriptionParents = {
+      context: plugin.parents, // Get data for all contexts
+      subscribe: [{
+        path: '*', // Get all paths
+        period: 10000 // Every 5000ms
+      }]
+    };
+
+    let localSubscriptionChildren = {
+      context: plugin.children, // Get data for all contexts
+      subscribe: [{
+        path: '*', // Get all paths
+        period: 10000 // Every 5000ms
+      }]
+    };
+
+    app.subscriptionmanager.subscribe(
+      localSubscriptionParents,
+      unsubscribes,
+      subscriptionError => {
+        app.error('Error:' + subscriptionError);
+      },
+      delta => {
+        delta.updates.forEach(u => {
+          app.debug(u.values.valueOf());
+        });
+      }
+    );
+
+    app.subscriptionmanager.subscribe(
+      localSubscriptionChildren,
+      unsubscribes,
+      subscriptionError => {
+        app.error('Error:' + subscriptionError);
+      },
+      delta => {
+        delta.updates.forEach(u => {
+          app.debug(u.values.valueOf());
+        });
+      }
+    );
+
   };
 
   plugin.stop = function (){
@@ -80,5 +128,5 @@ module.exports = function (app) {
 
 
   return plugin;
-}
+};
 

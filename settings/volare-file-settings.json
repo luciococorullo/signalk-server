@@ -5,7 +5,6 @@
     "type": "22",
     "uuid": "urn:mrn:signalk:uuid:c0d79334-4e25-4245-8892-54e8ccc8021d"
   },
-
   "pipedProviders": [
     {
       "id": "nmeaFromFile",
@@ -38,6 +37,25 @@
           }
         }
       ]
+    },
+    {
+      "pipeElements": [
+        {
+          "type": "providers/simple",
+          "options": {
+            "logging": false,
+            "type": "FileStream",
+            "subOptions": {
+              "validateChecksum": true,
+              "dataType": "NMEA0183",
+              "filename": "/Users/luciococorullo/WebstormProjects/signalk-server/samples/plaka.log"
+            }
+          }
+        }
+      ],
+      "id": "fileSignalk",
+      "enabled": true
     }
-  ]
+  ],
+  "interfaces": {}
 }
