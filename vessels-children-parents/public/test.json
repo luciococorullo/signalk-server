@@ -1,0 +1,45 @@
+[
+  {
+    "timestamp": "2022-11-24T17:23:01.964Z",
+    "values": [
+      { "path": "parents", "value": ["urn:mrn:signalk:uuid:parentvessel"] },
+      { "path": "children", "value": [] },
+      { "path": "navigation.speedThroughWater", "value": 3.2461452668012454 },
+      {
+        "path": "navigation.courseOverGroundMagnetic",
+        "value": 3.445454477148705
+      },
+      { "path": "navigation.courseOverGroundTrue", "value": 3.445454477148705 },
+      { "path": "navigation.speedOverGround", "value": 3.0918118943701245 },
+      { "path": "navigation.courseRhumbline.crossTrackError", "value": 0 },
+      {
+        "path": "navigation.position",
+        "value": { "longitude": 23.47295, "latitude": 60.01835 }
+      },
+      { "path": "performance.velocityMadeGood", "value": 2.896322955957371 },
+      { "path": "environment.wind.speedApparent", "value": 5.396523589341532 },
+      {
+        "path": "environment.wind.angleApparent",
+        "value": -0.22689280281106916
+      },
+      { "path": "environment.wind.speedTrue", "value": 2.07 },
+      {
+        "path": "environment.wind.angleTrueWater",
+        "value": -0.40142572805035315
+      },
+      { "path": "environment.depth.belowTransducer", "value": 34.89 },
+      {
+        "path": "environment.current",
+        "value": { "setTrue": 0, "setMagnetic": 0, "drift": 0 }
+      },
+      {
+        "path": "",
+        "value": {
+          "uuid": "urn:mrn:signalk:uuid:childvessel",
+          "name": "childvessel"
+        }
+      }
+    ],
+    "$source": "defaults"
+  }
+]

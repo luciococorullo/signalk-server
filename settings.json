@@ -1,0 +1,25 @@
+{
+  "pipedProviders": [
+    {
+      "pipeElements": [
+        {
+          "type": "providers/simple",
+          "options": {
+            "logging": false,
+            "type": "FileStream",
+            "subOptions": {
+              "dataType": "NMEA0183",
+              "filename": "/usr/lib/node_modules/signalk-server/samples/plaka.log"
+            }
+          }
+        }
+      ],
+      "id": "fileStream",
+      "enabled": true
+    }
+  ],
+  "interfaces": {},
+  "security": {
+    "strategy": "./tokensecurity"
+  }
+}

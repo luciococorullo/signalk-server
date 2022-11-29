@@ -1,0 +1,18 @@
+[
+  {
+    "context": "vessels.self",
+    "updates": [
+      {
+        "values": [
+          {
+            "path": "",
+            "value": {
+              "uuid": "urn:mrn:signalk:uuid:parentvessel",
+              "name": "parentVessel"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

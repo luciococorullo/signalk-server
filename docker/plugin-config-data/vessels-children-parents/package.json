@@ -11,13 +11,5 @@
     "signalk-webapp"
   ],
   "author": "luciococorullo",
-  "license": "ISC",
-  "dependencies": {
-    "@signalk/client": "^2.3.0",
-    "bonjour": "^3.5.0",
-    "eventemitter3": "^4.0.7",
-    "jquery": "^3.6.1",
-    "require": "^2.4.20",
-    "requirejs": "^2.3.6"
-  }
+  "license": "ISC"
 }

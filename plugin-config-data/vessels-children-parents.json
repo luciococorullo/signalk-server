@@ -1,0 +1,11 @@
+{
+  "configuration": {
+    "parents": [],
+    "children": [
+      "urn:mrn:signalk:uuid:childvessel"
+    ]
+  },
+  "enabled": true,
+  "enableLogging": true,
+  "enableDebug": true
+}
