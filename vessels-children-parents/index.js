@@ -80,7 +80,7 @@ module.exports = function (app) {
     let localSubscriptionChildren = {
       context: plugin.children, // Get data for all contexts
       subscribe: [{
-        path: 'navigation', // Get all paths
+        path: '*', // Get all paths
         period: 60000 // Every 5000ms
       }]
     };
@@ -92,10 +92,10 @@ module.exports = function (app) {
         app.error('Error:' + subscriptionError);
       },
       delta => {
-        parentVesselData = makeFullDelta()
+        parentVesselData = makeFullDelta(plugin.parents[0])
         
         delta.updates.forEach(u => {
-          app.debug(u.values)
+          //app.debug(u.values)
           //app.debug(u.values.valueOf());
         });
       }
@@ -108,26 +108,23 @@ module.exports = function (app) {
         app.error('Error:' + subscriptionError);
       },
       delta => {
-        childVesselData = makeFullDelta()
+        childVesselData = makeFullDelta(plugin.children[0] == null ? app.selfId : plugin.children[0])
         delta.updates.forEach(key => {
             // Create the path sting from all path elements except the last
-            app.debug(key.values)
+            //app.debug(key.values)
         });
       }
     );
-
-
-
   };
 
-
+//check if a variable is undefined in js?
 
   // Create an update form the full document
-  function makeFullDelta() {
+  function makeFullDelta(vesselUUID) {
 
     // Set the context
-    const context = "vessels." + app.selfId
-    
+    const context = "vessels." + vesselUUID
+    //app.debug("context " + context)
     // Get the whole document
     let doc = app.getPath(context)
 
@@ -169,7 +166,6 @@ module.exports = function (app) {
         } else {
           // Create the path sting from all path elements except the last
           let pathString = signakPath.slice(0, -1).join('.')
-
           // Check if the current key is "value"
           if (key === "value") {
 
