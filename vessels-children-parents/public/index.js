@@ -1,60 +1,44 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-// cose da visualizzare nell'html
 
+var body = document.getElementsByTagName('body')[0]
 
-var childVessel = [];
-var parentVessel = []
-
-var requestChildren = $.ajax({
-  async: false,
-  url: '/plugins/vessels-children-parents/childVessel',
-  success: function (data) {
-
-    console.log("Full delta " + JSON.stringify(data))
-    //console.log("Mapping: " + JSON.stringify(data["updates"][0]["values"]))
+function displayObjectData(object) {
+  var content = ''
+  Object.entries(object).forEach((obj) => {
+    var value = ''
     
-    data["updates"][0]["values"].forEach(element => {
-      //console.log(element["path"] + " added")
-      childVessel.push({ "path": element["path"], "value": element["value"] })
-      
-    });
-    //childVessel[JSON.stringify(data.valueOf()[0]["path"]).replaceAll('"' ,"")] = JSON.stringify(data.valueOf()[0]["value"]).replaceAll('"' ,"")
-    //console.log("ChildVessel: " + JSON.stringify(childVessel))
-  }
-})
+    console.log(obj[1])
+    if(!obj[1]['value']){
+      value = ''
+    } else if(typeof(obj[1]['value']) === 'object'){
+      value = displayObjectData(obj[1]['value'])
+    } else {
+      value = obj[1]['value']
+    }
 
-var requestParents = $.ajax({
-  async: false,
-  url: '/plugins/vessels-children-parents/parentVessel',
-  success: function (data) {
-    console.log("Full parent delta " + JSON.stringify(data))
-    data["updates"][0]["values"].forEach(element => {
-      parentVessel.push({ "path": element["path"], "value": element["value"] })
-    });
-  }
-})
+    //obj[1]['value'] === undefined ? value = '' : value = obj[1]['value']
+    content += obj[0] + ': ' + value + '\n'
+  })
+  return content
+}
 
-var body = document.getElementsByTagName('body')[0];
-var childUUID = childVessel.at(childVessel.length-1)["value"]["uuid"]
-var parentUUID = parentVessel.at(parentVessel.length-1)["value"]["uuid"]
-
-//how to i create a table in js?
+// function that creates a table
 function tableCreate(vessel) {
-  var tbl = document.createElement("table");
-  tbl.style.width = '80%';
+  var tbl = document.createElement('table')
+  tbl.style.width = '80%'
   tbl.style.alignSelf = 'center'
-  tbl.setAttribute('border', '1');
-  var tbdy = document.createElement('tbody');
-  vessel.forEach(el => {
-    var tr = document.createElement('tr');
+  tbl.setAttribute('border', '1')
+  var tbdy = document.createElement('tbody')
+  Object.entries(vessel).forEach((el) => {
+    var tr = document.createElement('tr')
     for (var j = 0; j < 2; j++) {
       if (j == 1) {
         break
       } else {
-        var td = document.createElement('td');
-        td.appendChild(document.createTextNode(el['path'] == "" ? 'UUID' : el["path"]))
-        j == 1 ? td.setAttribute('rowSpan', '2') : null;
+        var td = document.createElement('td')
+        td.appendChild(document.createTextNode(el[0] == '' ? 'UUID' : el[0]))
+        j == 1 ? td.setAttribute('rowSpan', '2') : null
         tr.appendChild(td)
       }
     }
@@ -62,54 +46,36 @@ function tableCreate(vessel) {
       if (i == 1) {
         break
       } else {
-        var td2 = document.createElement('td');
-        td2.appendChild(document.createTextNode(el['value']))
-        i == 1 ? td2.setAttribute('rowSpan', '2') : null;
+        var td2 = document.createElement('td')
+        var content = ''
+        td2.appendChild(
+          document.createTextNode(
+            typeof el[1] === 'object' ? displayObjectData(el[1]) : el[1]
+          )
+        )
+        i == 1 ? td2.setAttribute('rowSpan', '2') : null
         tr.appendChild(td2)
       }
     }
-    tbdy.appendChild(tr);
+    tbdy.appendChild(tr)
   })
-  tbl.appendChild(tbdy);
+  tbl.appendChild(tbdy)
   body.appendChild(tbl)
 }
 
-
-
-var childTitle = document.createElement('h1')
-childTitle.textContent = childUUID
-body.appendChild(childTitle)
-tableCreate(childVessel); 
-
-var parentTitle = document.createElement('h1')
-parentTitle.textContent = parentUUID
-body.appendChild(parentTitle)
-tableCreate(parentVessel);
-
-/* const table = document.getElementById("childTable")
-const parentsTable = document.getElementById("parentsTable")
-
-var titles = document.createElement("TR");
-titles.setAttribute("id", "titles");
-titles.innerHTML = '<th> Paths </th> <th> Values </th>'
-table.appendChild(titles);
-parentsTable.appendChild(titles)
-
-
-childVessel.forEach(el => {
-  //console.log(JSON.stringify(el))
-  var tableElement = document.createElement("TR")
-  tableElement.innerHTML = '<td> ' + el["path"] + ' </td> <td> ' + el["value"] + ' </td>'
-  table.append(tableElement)
-})
-
-parentVessel.forEach(el => {
-  //console.log(JSON.stringify(el))
-  var tableElement = document.createElement("TR")
-  tableElement.innerHTML = '<td> ' + el["path"] + ' </td> <td> ' + el["value"] + ' </td>'
-  parentsTable.append(tableElement)
-}) */
-
-
-
-
+// fetching the data from a signalk server
+fetch('http://localhost:3001/signalk/v1/api/vessels')
+  .then((response) => response.json())
+  .catch((error) => {
+    console.log(error)
+  })
+  .then((vesselsData) => {
+    Object.entries(vesselsData).forEach((vessel) => {
+      console.log(JSON.stringify(vessel))
+      console.log(vessel[1].name)
+      var title = document.createElement('h1')
+      title.textContent = vessel[1].name
+      body.appendChild(title)
+      tableCreate(vessel[1])
+    })
+  })
