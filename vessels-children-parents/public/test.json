@@ -1,45 +1,427 @@
-[
-  {
-    "timestamp": "2022-11-24T17:23:01.964Z",
-    "values": [
-      { "path": "parents", "value": ["urn:mrn:signalk:uuid:parentvessel"] },
-      { "path": "children", "value": [] },
-      { "path": "navigation.speedThroughWater", "value": 3.2461452668012454 },
-      {
-        "path": "navigation.courseOverGroundMagnetic",
-        "value": 3.445454477148705
-      },
-      { "path": "navigation.courseOverGroundTrue", "value": 3.445454477148705 },
-      { "path": "navigation.speedOverGround", "value": 3.0918118943701245 },
-      { "path": "navigation.courseRhumbline.crossTrackError", "value": 0 },
-      {
-        "path": "navigation.position",
-        "value": { "longitude": 23.47295, "latitude": 60.01835 }
-      },
-      { "path": "performance.velocityMadeGood", "value": 2.896322955957371 },
-      { "path": "environment.wind.speedApparent", "value": 5.396523589341532 },
-      {
-        "path": "environment.wind.angleApparent",
-        "value": -0.22689280281106916
-      },
-      { "path": "environment.wind.speedTrue", "value": 2.07 },
-      {
-        "path": "environment.wind.angleTrueWater",
-        "value": -0.40142572805035315
-      },
-      { "path": "environment.depth.belowTransducer", "value": 34.89 },
-      {
-        "path": "environment.current",
-        "value": { "setTrue": 0, "setMagnetic": 0, "drift": 0 }
-      },
-      {
-        "path": "",
-        "value": {
-          "uuid": "urn:mrn:signalk:uuid:childvessel",
-          "name": "childvessel"
-        }
-      }
+{
+  "uuid": "urn:mrn:signalk:uuid:childvessel",
+  "name": "childvessel",
+  "parents": {
+    "meta": {},
+    "value": [
+      "urn:mrn:signalk:uuid:parentvessel"
     ],
-    "$source": "defaults"
+    "$source": "vessels-children-parents",
+    "timestamp": "2023-01-11T09:03:54.948Z"
+  },
+  "children": {
+    "meta": {},
+    "value": [],
+    "$source": "vessels-children-parents",
+    "timestamp": "2023-01-11T09:03:54.948Z"
+  },
+  "navigation": {
+    "speedThroughWater": {
+      "meta": {
+        "units": "m/s",
+        "description": "Vessel speed through the water"
+      },
+      "value": 3.2461452668012454,
+      "$source": "fileStreamSignal-k.II",
+      "timestamp": "2023-01-11T12:25:50.093Z",
+      "sentence": "VHW"
+    },
+    "courseOverGroundMagnetic": {
+      "meta": {
+        "units": "rad",
+        "description": "Course over ground (magnetic)"
+      },
+      "value": 3.516663910646333,
+      "$source": "fileStreamSignal-k.II",
+      "timestamp": "2023-01-11T12:25:49.744Z",
+      "sentence": "VTG"
+    },
+    "courseOverGroundTrue": {
+      "meta": {
+        "units": "rad",
+        "description": "Course over ground (true)"
+      },
+      "value": 3.516663910646333,
+      "$source": "fileStreamSignal-k.II",
+      "timestamp": "2023-01-11T12:25:49.744Z",
+      "sentence": "VTG"
+    },
+    "speedOverGround": {
+      "meta": {
+        "units": "m/s",
+        "description": "Vessel speed over ground. If converting from AIS 'HIGH' value, set to 102.2 (Ais max value) and add warning in notifications"
+      },
+      "value": 3.1329674603517566,
+      "$source": "fileStreamSignal-k.II",
+      "timestamp": "2023-01-11T12:25:49.744Z",
+      "sentence": "VTG"
+    },
+    "courseRhumbline": {
+      "crossTrackError": {
+        "meta": {
+          "units": "m",
+          "description": "The distance from the vessel's present position to the closest point on a line (track) between previousPoint and nextPoint. A negative number indicates that the vessel is currently to the left of this line (and thus must steer right to compensate), a positive number means the vessel is to the right of the line (steer left to compensate)."
+        },
+        "value": 0,
+        "$source": "fileStreamSignal-k.GP",
+        "timestamp": "2023-01-11T12:25:49.854Z",
+        "sentence": "XTE"
+      }
+    },
+    "position": {
+      "meta": {
+        "description": "The position of the vessel in 2 or 3 dimensions (WGS84 datum)",
+        "properties": {
+          "longitude": {
+            "type": "number",
+            "description": "Longitude",
+            "units": "deg",
+            "example": 4.98765245
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude",
+            "units": "deg",
+            "example": 52.0987654
+          },
+          "altitude": {
+            "type": "number",
+            "description": "Altitude",
+            "units": "m"
+          }
+        }
+      },
+      "value": {
+        "longitude": 23.50295,
+        "latitude": 60.05155
+      },
+      "$source": "fileStreamSignal-k.GP",
+      "timestamp": "2023-01-11T10:19:32.000Z",
+      "sentence": "GLL"
+    }
+  },
+  "performance": {
+    "velocityMadeGood": {
+      "meta": {
+        "units": "m/s",
+        "description": "The current velocity made good derived from the speed through water and appearant wind angle. A positive value is heading to upwind, negative to downwind."
+      },
+      "value": 2.9683451964252274,
+      "$source": "fileStreamSignal-k.II",
+      "timestamp": "2023-01-11T12:25:49.704Z",
+      "sentence": "VPW"
+    }
+  },
+  "environment": {
+    "wind": {
+      "speedApparent": {
+        "meta": {
+          "units": "m/s",
+          "description": "Apparent wind speed"
+        },
+        "value": 6.199057125983361,
+        "$source": "fileStreamSignal-k.II",
+        "timestamp": "2023-01-11T12:25:49.770Z",
+        "sentence": "MWV"
+      },
+      "angleApparent": {
+        "meta": {
+          "units": "rad",
+          "description": "Apparent wind angle, negative to port"
+        },
+        "value": 0.20943951028714078,
+        "$source": "fileStreamSignal-k.II",
+        "timestamp": "2023-01-11T12:25:49.770Z",
+        "sentence": "MWV"
+      },
+      "speedTrue": {
+        "meta": {
+          "units": "m/s",
+          "description": "Wind speed over water (as calculated from speedApparent and vessel's speed through water)"
+        },
+        "value": 3.11,
+        "$source": "fileStreamSignal-k.II",
+        "timestamp": "2023-01-11T12:25:49.804Z",
+        "sentence": "VWT"
+      },
+      "angleTrueWater": {
+        "meta": {
+          "units": "rad",
+          "description": "True wind angle based on speed through water, negative to port"
+        },
+        "value": 0.41887902057428156,
+        "$source": "fileStreamSignal-k.II",
+        "timestamp": "2023-01-11T12:25:49.804Z",
+        "sentence": "VWT"
+      }
+    },
+    "depth": {
+      "belowTransducer": {
+        "meta": {
+          "units": "m",
+          "description": "Depth below Transducer"
+        },
+        "value": 15.43,
+        "$source": "fileStreamSignal-k.II",
+        "timestamp": "2023-01-11T12:25:49.915Z",
+        "sentence": "DBT"
+      }
+    },
+    "current": {
+      "meta": {
+        "description": "Direction and strength of current affecting the vessel",
+        "properties": {
+          "drift": {
+            "type": "number",
+            "description": "The speed component of the water current vector",
+            "example": 3.12,
+            "units": "m/s"
+          },
+          "setTrue": {
+            "type": "number",
+            "description": "The direction component of the water current vector referenced to true (geographic) north",
+            "example": 123.45,
+            "units": "rad"
+          },
+          "setMagnetic": {
+            "type": "number",
+            "description": "The direction component of the water current vector referenced to magnetic north",
+            "example": 131.22,
+            "units": "rad"
+          }
+        }
+      },
+      "value": {
+        "setTrue": 0,
+        "setMagnetic": 0,
+        "drift": 0
+      },
+      "$source": "fileStreamSignal-k.II",
+      "timestamp": "2023-01-11T12:25:50.060Z",
+      "sentence": "VDR"
+    }
+  },
+  "notifications": {
+    "server": {
+      "newVersion": {
+        "meta": {},
+        "value": {
+          "state": "alert",
+          "method": [],
+          "message": "A new version (1.46.3) of the server is available"
+        },
+        "$source": "signalk-server",
+        "timestamp": "2023-01-11T09:03:55.850Z"
+      }
+    }
   }
+}
+]
+index.js: 76 childvessel
+index.js: 75 [
+"urn:mrn:signalk:uuid:parentvessel",
+{
+  "uuid": "urn:mrn:signalk:uuid:parentvessel",
+  "name": "parentVessel",
+  "notifications": {
+    "server": {
+      "newVersion": {
+        "meta": {},
+        "value": {
+          "state": "alert",
+          "method": [],
+          "message": "A new version (1.46.3) of the server is available"
+        },
+        "$source": "testSignalK.localhost:3000",
+        "timestamp": "2023-01-11T09:00:22.502Z"
+      }
+    }
+  },
+  "environment": {
+    "wind": {
+      "speedApparent": {
+        "meta": {
+          "units": "m/s",
+          "description": "Apparent wind speed"
+        },
+        "value": 5.895534826868824,
+        "$source": "testSignalK.II",
+        "timestamp": "2023-01-11T12:25:49.734Z",
+        "sentence": "MWV"
+      },
+      "angleApparent": {
+        "meta": {
+          "units": "rad",
+          "description": "Apparent wind angle, negative to port"
+        },
+        "value": -0.052359877571785195,
+        "$source": "testSignalK.II",
+        "timestamp": "2023-01-11T12:25:49.734Z",
+        "sentence": "MWV"
+      },
+      "speedTrue": {
+        "meta": {
+          "units": "m/s",
+          "description": "Wind speed over water (as calculated from speedApparent and vessel's speed through water)"
+        },
+        "value": 2.64,
+        "$source": "testSignalK.II",
+        "timestamp": "2023-01-11T12:25:49.769Z",
+        "sentence": "VWT"
+      },
+      "angleTrueWater": {
+        "meta": {
+          "units": "rad",
+          "description": "True wind angle based on speed through water, negative to port"
+        },
+        "value": -0.1396263401914272,
+        "$source": "testSignalK.II",
+        "timestamp": "2023-01-11T12:25:49.769Z",
+        "sentence": "VWT"
+      }
+    },
+    "current": {
+      "meta": {
+        "description": "Direction and strength of current affecting the vessel",
+        "properties": {
+          "drift": {
+            "type": "number",
+            "description": "The speed component of the water current vector",
+            "example": 3.12,
+            "units": "m/s"
+          },
+          "setTrue": {
+            "type": "number",
+            "description": "The direction component of the water current vector referenced to true (geographic) north",
+            "example": 123.45,
+            "units": "rad"
+          },
+          "setMagnetic": {
+            "type": "number",
+            "description": "The direction component of the water current vector referenced to magnetic north",
+            "example": 131.22,
+            "units": "rad"
+          }
+        }
+      },
+      "value": {
+        "setTrue": 0,
+        "setMagnetic": 0,
+        "drift": 0
+      },
+      "$source": "testSignalK.II",
+      "timestamp": "2023-01-11T12:25:50.025Z",
+      "sentence": "VDR"
+    },
+    "depth": {
+      "belowTransducer": {
+        "meta": {
+          "units": "m",
+          "description": "Depth below Transducer"
+        },
+        "value": 32.66,
+        "$source": "testSignalK.II",
+        "timestamp": "2023-01-11T12:25:49.879Z",
+        "sentence": "DBT"
+      }
+    }
+  },
+  "navigation": {
+    "speedThroughWater": {
+      "meta": {
+        "units": "m/s",
+        "description": "Vessel speed through the water"
+      },
+      "value": 3.2461452668012454,
+      "$source": "testSignalK.II",
+      "timestamp": "2023-01-11T12:25:50.056Z",
+      "sentence": "VHW"
+    },
+    "courseOverGroundMagnetic": {
+      "meta": {
+        "units": "rad",
+        "description": "Course over ground (magnetic)"
+      },
+      "value": 3.7014942784747347,
+      "$source": "testSignalK.II",
+      "timestamp": "2023-01-11T12:25:49.710Z",
+      "sentence": "VTG"
+    },
+    "courseOverGroundTrue": {
+      "meta": {
+        "units": "rad",
+        "description": "Course over ground (true)"
+      },
+      "value": 3.7014942784747347,
+      "$source": "testSignalK.II",
+      "timestamp": "2023-01-11T12:25:49.710Z",
+      "sentence": "VTG"
+    },
+    "speedOverGround": {
+      "meta": {
+        "units": "m/s",
+        "description": "Vessel speed over ground. If converting from AIS 'HIGH' value, set to 102.2 (Ais max value) and add warning in notifications"
+      },
+      "value": 3.1329674603517566,
+      "$source": "testSignalK.II",
+      "timestamp": "2023-01-11T12:25:49.710Z",
+      "sentence": "VTG"
+    },
+    "courseRhumbline": {
+      "crossTrackError": {
+        "meta": {
+          "units": "m",
+          "description": "The distance from the vessel's present position to the closest point on a line (track) between previousPoint and nextPoint. A negative number indicates that the vessel is currently to the left of this line (and thus must steer right to compensate), a positive number means the vessel is to the right of the line (steer left to compensate)."
+        },
+        "value": 0,
+        "$source": "testSignalK.GP",
+        "timestamp": "2023-01-11T12:25:49.816Z",
+        "sentence": "XTE"
+      }
+    },
+    "position": {
+      "meta": {
+        "description": "The position of the vessel in 2 or 3 dimensions (WGS84 datum)",
+        "properties": {
+          "longitude": {
+            "type": "number",
+            "description": "Longitude",
+            "units": "deg",
+            "example": 4.98765245
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude",
+            "units": "deg",
+            "example": 52.0987654
+          },
+          "altitude": {
+            "type": "number",
+            "description": "Altitude",
+            "units": "m"
+          }
+        }
+      },
+      "value": {
+        "longitude": 23.477266666666665,
+        "latitude": 60.02418333333333
+      },
+      "$source": "testSignalK.GP",
+      "timestamp": "2023-01-11T10:37:33.000Z",
+      "sentence": "GLL"
+    }
+  },
+  "performance": {
+    "velocityMadeGood": {
+      "meta": {
+        "units": "m/s",
+        "description": "The current velocity made good derived from the speed through water and appearant wind angle. A positive value is heading to upwind, negative to downwind."
+      },
+      "value": 3.127823014604053,
+      "$source": "testSignalK.II",
+      "timestamp": "2023-01-11T12:25:50.077Z",
+      "sentence": "VPW"
+    }
+  }
+}
 ]
