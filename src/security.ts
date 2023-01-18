@@ -15,6 +15,7 @@
  * limitations under the License.
 */
 
+import { Request, Response } from 'express'
 import {
   chmodSync,
   existsSync,
@@ -26,15 +27,89 @@ import {
 } from 'fs'
 import _ from 'lodash'
 import path from 'path'
-import pem from 'pem'
+import { certificateFor } from 'devcert'
 import { Mode } from 'stat-mode'
 import { WithConfig } from './app'
 import { createDebug } from './debug'
 import dummysecurity from './dummysecurity'
+import { ICallback } from './types'
 const debug = createDebug('signalk-server:security')
 
 export interface WithSecurityStrategy {
   securityStrategy: SecurityStrategy
+}
+
+export interface LoginStatusResponse {
+  status: string // 'loggedIn' 'notLoggedIn'
+  readOnlyAccess?: boolean
+  authenticationRequired?: boolean
+  allowNewUserRegistration?: boolean
+  allowDeviceAccessRequests?: boolean
+  userLevel?: any
+  username?: string
+}
+
+export interface ACL {
+  context: string
+  resources: Array<{
+    paths?: string[]
+    sources?: string[]
+    permissions: Array<{
+      subject: string
+      permission: string
+    }>
+  }>
+}
+export interface User {
+  username: string
+  type: string
+  password: string
+}
+export interface UserData {
+  userId: string
+  type: string
+}
+export interface UserDataUpdate {
+  type?: string
+  password?: string
+}
+
+export interface UserWithPassword {
+  userId: string
+  type: string
+  password: string
+}
+
+export interface Device {
+  clientId: string
+  permissions: string
+  config: any
+  description: string
+  requestedPermissions: string
+}
+
+export interface DeviceDataUpdate {
+  permissions?: string
+  description?: string
+}
+
+export interface SecurityConfig {
+  immutableConfig: boolean
+  allow_readonly: boolean
+  allowNewUserRegistration: boolean
+  allowDeviceAccessRequests: boolean
+  allowedCorsOrigins?: string
+  expiration: string
+  devices: Device[]
+  secretKey: string
+  users: User[]
+  acls?: ACL[]
+}
+
+export interface RequestStatusData {
+  expiration: string
+  permissions: any
+  config: any
 }
 
 export interface SecurityStrategy {
@@ -44,7 +119,71 @@ export interface SecurityStrategy {
   filterReadDelta: (user: any, delta: any) => any
   configFromArguments: boolean
   securityConfig: any
-  requestAccess: (config: any, request: any, ip: any, updateCb: any) => any
+  requestAccess: (config: any, request: any, ip: any, updateCb?: any) => any
+  getConfiguration: () => any
+
+  setAccessRequestStatus: (
+    theConfig: SecurityConfig,
+    identifier: string,
+    status: string,
+    body: RequestStatusData,
+    cb: ICallback<SecurityConfig>
+  ) => void
+  getAccessRequestsResponse: any
+
+  getLoginStatus: (req: Request) => LoginStatusResponse
+  allowRestart: (req: Request) => boolean
+  allowConfigure: (req: Request) => boolean
+
+  getConfig: (ss: SecurityConfig) => Omit<SecurityConfig, 'secretKey' | 'users'>
+  setConfig: (prev: SecurityConfig, next: SecurityConfig) => SecurityConfig
+
+  validateConfiguration: (config: any) => void
+  getDevices: (theConfig: SecurityConfig) => Device[]
+  updateDevice: (
+    theConfig: SecurityConfig,
+    clientId: string,
+    updates: DeviceDataUpdate,
+    cb: ICallback<SecurityConfig>
+  ) => void
+  deleteDevice: (
+    theConfig: SecurityConfig,
+    clientId: string,
+    cb: ICallback<SecurityConfig>
+  ) => void
+
+  generateToken: (
+    req: Request,
+    res: Response,
+    next: any,
+    id: string,
+    expiration: string
+  ) => void
+
+  getUsers: (theConfig: SecurityConfig) => UserData[]
+  addUser: (
+    theConfig: SecurityConfig,
+    user: UserWithPassword,
+    cb: ICallback<SecurityConfig>
+  ) => void
+  updateUser: (
+    theConfig: SecurityConfig,
+    username: string,
+    userDataUpdate: UserDataUpdate,
+    cb: ICallback<SecurityConfig>
+  ) => void
+  deleteUser: (
+    theConfig: SecurityConfig,
+    username: string,
+    cb: ICallback<SecurityConfig>
+  ) => void
+
+  setPassword: (
+    theConfig: SecurityConfig,
+    username: string,
+    password: string,
+    cb: ICallback<SecurityConfig>
+  ) => void
 }
 
 export class InvalidTokenError extends Error {
@@ -91,7 +230,7 @@ export function getSecurityConfig(
   app: WithConfig & WithSecurityStrategy,
   forceRead = false
 ) {
-  if (!forceRead && app.securityStrategy.configFromArguments) {
+  if (!forceRead && app.securityStrategy?.configFromArguments) {
     return app.securityStrategy.securityConfig
   } else {
     try {
@@ -210,27 +349,20 @@ export function createCertificateOptions(
 ) {
   const location = app.config.configPath ? app.config.configPath : './settings'
   debug(`Creating certificate files in ${location}`)
-  pem.createCertificate(
-    {
-      days: 360,
-      selfSigned: true
-    },
-    (err: any, keys: any) => {
-      if (err) {
-        console.error('Could not create SSL certificate:' + err.message)
-        throw err
-      } else {
-        writeFileSync(keyFile, keys.serviceKey)
-        chmodSync(keyFile, '600')
-        writeFileSync(certFile, keys.certificate)
-        chmodSync(certFile, '600')
-        cb(null, {
-          key: keys.serviceKey,
-          cert: keys.certificate
-        })
-      }
-    }
-  )
+  certificateFor([
+    'localhost'
+  ])
+    .then(({ key, cert }) => {
+      writeFileSync(keyFile, key)
+      chmodSync(keyFile, '600')
+      writeFileSync(certFile, cert)
+      chmodSync(certFile, '600')
+      cb(null, {
+        key: key,
+        cert: cert
+      })
+    })
+    .catch(console.error);
 }
 
 export function requestAccess(
@@ -242,3 +374,10 @@ export function requestAccess(
   const config = getSecurityConfig(app)
   return app.securityStrategy.requestAccess(config, request, ip, updateCb)
 }
+
+export type SecurityConfigSaver = (
+  app: any,
+  securityConfig: any,
+  cb: (err: any) => void
+) => void
+export type SecurityConfigGetter = (app: any) => any
