@@ -1,0 +1,21 @@
+{
+  "name": "vessels-dependencies",
+  "version": "1.0.0",
+  "description": "Plugin that create an hierical relationship between the vessel and other vessels",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "signalk-node-server-plugin",
+    "signalk-webapp",
+    "signalk-category-utility"
+  ],
+  "author": "luciococorullo",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "cytoscape": "^3.23.0"
+  },
+  "devDependencies": {}
+}
